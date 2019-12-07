@@ -8,7 +8,7 @@ class network():
     def __init__(self, NumeroNodos):
         """Constructor"""
         self.N = NumeroNodos
-        self.nodes = self.completeGraph
+        self.nodes = self.completeGraph()
         
 
     def completeGraph(self):

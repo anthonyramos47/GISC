@@ -8,26 +8,28 @@ import random
 
 class nodeSW(node):
     
-    def __init__(self, cnxL, cnxR):
-        self.cnxL = cnxL
-        self.cnxR = cnxR
-        self.cnx = cnxL+cnxR
+    def __init__(self, *argv):
+        self.cnxL = argv[0]
+        self.cnxR = argv[1]
+        self.cnx = self.cnxL + self.cnxR
 
                        
 class swNet(network):
 
 
     def __init__(self, NumeroNodos, K, p):
-        """Constructor"""
+        """Constructor""" 
         self.N = NumeroNodos
+        self.nodetype = nodeSW
         self.nodes = self.orderedNetwork(K)
         self.wsNet(p)
+        
 
     def orderedNetwork(self, K):
         totalN = self.N
         nodesList = []
         for i in range(totalN):
-            nodo = nodeSW([],[])
+            nodo = self.nodetype([],[])
             nodesList.append(self.vecinos(nodo, i, K))
         return nodesList
 
@@ -46,7 +48,7 @@ class swNet(network):
 
     def printNodes(self):
         for i in range(self.N):
-            print(self.nodes[i])
+            print("Nodo {}, {} ".format(i,self.nodes[i]))
 
 
 
@@ -57,10 +59,9 @@ class swNet(network):
         for i in range(N):
             rdm=random.random()
             if(rdm<p):
-                n1=i
-                n2=random.choice(self.nodes[n1].cnxR)
-                n3=select_node(self.nodes[n1].cnx,n1,N)
-                
+                n1=i #Actual
+                n2=random.choice(self.nodes[n1].cnxR) #ex-coneccion
+                n3=select_node(self.nodes[n1].cnx,n1,N) #Recableado 
                 self.nodes[n1].cnxR.remove(n2)
                 self.nodes[n1].cnx.remove(n2)
                 self.nodes[n1].cnxL.append(n3)
@@ -73,10 +74,9 @@ class swNet(network):
                 self.nodes[n3].cnx.append(n1)
 
 def select_node(cnxs,n1,N):
-    candidates=[]
-    cnxs.append(n1)
+    candidates=[]    
     for i in range(N):
-        if i not in cnxs:
+        if (i not in cnxs) and (i != n1) :
             candidates.append(i)
     n2=random.choice(candidates)
     return n2
