@@ -1,5 +1,6 @@
 # Module Homphile dynamics
 from Topologies import *
+from Node import node
 import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -8,15 +9,15 @@ import random
 
 
 
-class node_H:
+class node_H(node):
 
     def __init__(self, vect, cnxs):
         # Constructor of the node used in the
         # homophily dynamics
         # Inputs: vec_Param, a list of integers
         #         cnx, the list of neighbors
+        node.__init__(self, cnxs)
         self.vec_Param = vect
-        self.cnx = cnxs 
         # List of neighbors of type node_H
 
 class homophily:

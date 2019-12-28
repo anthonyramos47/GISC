@@ -40,13 +40,12 @@ class network():
     def plotAdjacentMatrix(self):
         # Method that plot the network. It return an
         # image of the topology of the network.
-
-        matrix = self.adjacentMatrix() 
-        # Create the adjacent matrix of the network
-        rows, cols = np.where(matrix == 1) 
-        # Get all the rows and columns with a number 1
-        edges = zip(rows.tolist(), cols.tolist()) 
-        # Create a list of edges of the form (row, col)
+        N = self.N
+        edges = []
+        for i in range(N):
+            cnx = self.nodes[i].cnx
+            for j in cnx:
+                edges.append([i,j])
         gr = nx.Graph() 
         # Initialize the graph
         gr.add_edges_from(edges)

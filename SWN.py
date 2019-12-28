@@ -15,7 +15,7 @@ class nodeSW(node):
         # Left connections 
         self.cnxR = argv[1]
         # Right connections 
-        self.cnx = self.cnxL + self.cnxR
+        node.__init__(self, self.cnxL + self.cnxR)
         # Total connections 
 
                        
@@ -106,20 +106,23 @@ class swNet(network):
                 # Randomly we choose a new connection
 
                 self.nodes[n1].cnxR.remove(n2)
-                self.nodes[n1].cnx.remove(n2)
+                #self.nodes[n1].cnx.remove(n2)
                 # Remove the connection n2 from n1
                 self.nodes[n1].cnxL.append(n3)
-                self.nodes[n1].cnx.append(n3)
+                #self.nodes[n1].cnx.append(n3)
                 # Add the new connection n3 to n1
           
                 self.nodes[n2].cnxL.remove(n1)
-                self.nodes[n2].cnx.remove(n1)
+                #self.nodes[n2].cnx.remove(n1)
                 # Remove the node n1 from 
                 # the connections of  n2
                 
                 self.nodes[n3].cnxL.append(n1)
-                self.nodes[n3].cnx.append(n1)
+                #self.nodes[n3].cnx.append(n1)
                 # Add the node n1 to n3
+                self.actualizarcnx(self.nodes[n1])
+                self.actualizarcnx(self.nodes[n2])
+                self.actualizarcnx(self.nodes[n3])
 
 def select_node(cnxs,n1,N):
     # Function to choose a random node
