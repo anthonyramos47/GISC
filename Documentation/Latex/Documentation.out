@@ -1,0 +1,12 @@
+\BOOKMARK [1][-]{section.1}{Abstract}{}% 1
+\BOOKMARK [1][-]{section.2}{Introduction}{}% 2
+\BOOKMARK [1][-]{section.3}{General Scheme of the Package}{}% 3
+\BOOKMARK [1][-]{section.4}{Parents Classes}{}% 4
+\BOOKMARK [2][-]{subsection.4.1}{Node Class}{section.4}% 5
+\BOOKMARK [2][-]{subsection.4.2}{Network Class}{section.4}% 6
+\BOOKMARK [1][-]{section.5}{Topologies}{}% 7
+\BOOKMARK [2][-]{subsection.5.1}{Small World Network}{section.5}% 8
+\BOOKMARK [2][-]{subsection.5.2}{Squared Network}{section.5}% 9
+\BOOKMARK [3][-]{subsubsection.5.2.1}{Scale free Network}{subsection.5.2}% 10
+\BOOKMARK [1][-]{section.6}{Dynamics}{}% 11
+\BOOKMARK [2][-]{subsection.6.1}{Homophily}{section.6}% 12

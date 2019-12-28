@@ -12,40 +12,66 @@ class network():
         
 
     def completeGraph(self):
-        nodesList = []
-        nodeT= self.N
+        # Method that create a complete graph. It return a list of objects node.
+
+        nodesList = [] # Create an empty list
+        nodeT= self.N # Define the total number of nodes
         for i in range(nodeT):
-            nodesList.append( node([x for x in range(nodeT)  if x != i]))
+            nodesList.append( node([x for x in range(nodeT)  if x != i])) 
+        # Append an object node, that is connected with all the other nodes except itself, at each iteration
         return nodesList
     
     def adjacentMatrix(self):
-        totalN = self.N
-        matrix = np.zeros((totalN, totalN))
+        # Method to create the adjacent matrix of the
+        # network. It return a list of list (matrix).
+
+        totalN = self.N # Total number of nodes
+        matrix = np.zeros((totalN, totalN)) 
+        # Initialize a matrix N x N of zeros
         for i in range(totalN):
             nodeaux = self.nodes[i]
             for j in nodeaux.cnx:
-                matrix[i][j] = 1        
+                matrix[i][j] = 1      
+        # For each node i, at j an integer in the list 
+        # of connections of the node it is put a 1 in 
+        # the position matrix[i,j] s
         return matrix
 
     def plotAdjacentMatrix(self):
-        matrix = self.adjacentMatrix()
+        # Method that plot the network. It return an
+        # image of the topology of the network.
+
+        matrix = self.adjacentMatrix() 
+        # Create the adjacent matrix of the network
         rows, cols = np.where(matrix == 1) 
-        edges = zip(rows.tolist(), cols.tolist())
-        gr = nx.Graph()
+        # Get all the rows and columns with a number 1
+        edges = zip(rows.tolist(), cols.tolist()) 
+        # Create a list of edges of the form (row, col)
+        gr = nx.Graph() 
+        # Initialize the graph
         gr.add_edges_from(edges)
+        # Add the edges to graph
         nx.draw_circular(gr, node_size=10)
+        # Define the characteristics of the plot
         plt.show() 
 
     def adjacentMatrixFile(self, fileName):
+        # Method to export a file with the adjacent 
+        # matrix. 
+        # Input: Name of the file.
+        # Return a file .dat with zeros and ones. 
+
         dataFile = open(str(fileName)+".dat","w")
-        matrix = self.adjacentMatrix()
-        totalN = self.N
+        # Create the file 
+        matrix = self.adjacentMatrix()  # Create the adjacent matrix
+        totalN = self.N 
         for i in range(totalN):
             for j in range(totalN-1):
                 dataFile.write("%d " % matrix[i][j])
             j +=1
             dataFile.write("%d" % matrix[i][j])
             dataFile.write("\n")
+        # Write in the file the information of the adjacent matrix
         dataFile.close()
      
 

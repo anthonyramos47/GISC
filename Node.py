@@ -4,7 +4,7 @@ class node:
 
     def __init__(self, *argv):
         """Constructor"""
-        self.cnx = argv[1] # Lista de vecinos
+        self.cnx = argv[0] # Lista de vecinos
         
 
     def __str__(self):

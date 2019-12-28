@@ -9,9 +9,14 @@ import random
 class nodeSW(node):
     
     def __init__(self, *argv):
+        #Constructor of the node used in the Small world network algorithm. The right connections correspond to those that we are going to reconnect. The left connections correspond to those that are going to be eliminated.
+
         self.cnxL = argv[0]
+        # Left connections 
         self.cnxR = argv[1]
+        # Right connections 
         self.cnx = self.cnxL + self.cnxR
+        # Total connections 
 
                        
 class swNet(network):
@@ -20,60 +25,104 @@ class swNet(network):
     def __init__(self, NumeroNodos, K, p):
         """Constructor""" 
         self.N = NumeroNodos
+        # Total Number of nodes
         self.nodetype = nodeSW
+        # Type of node of the network
         self.nodes = self.orderedNetwork(K)
+        # Create a ordered network
         self.wsNet(p)
+        # Scramble the network 
+        # #with a probability p
         
 
     def orderedNetwork(self, K):
+        # Method to create an ordered network with
+        # K number of neighbors per node
+        # Input: K, number of neighbors
+        # Outputs: List of objects self.nodetype
+
         totalN = self.N
+        # total number of nodes
         nodesList = []
+        # Initialice an empty list
         for i in range(totalN):
             nodo = self.nodetype([],[])
             nodesList.append(self.vecinos(nodo, i, K))
+        # Append a class node with k neighbors; k/2 to left, k/2 to the right
         return nodesList
 
     def vecinos(self, nodo, i, K):
+        # Method to assing the neigbors to a node
+        # Input: nodo, class node
+        #        i, the position of the node
+        #        K, the total number of neighbors
+        # Outputs: object self.typenode
+                           
         totalN = self.N
         for j in range(K//2):
             nodo.cnxL.append((i-j-1)%totalN)
+            # Assign the left connections
             nodo.cnxR.append((j+i+1)%totalN)
-        self.actualizarcnx(nodo) 
+            # Assign the right connections
+        self.actualizarcnx(nodo)
+        # Update the state of the node 
         return nodo
 
     def actualizarcnx(self, nodo):
+        # Method to update the total connections 
+        # of a node
+        # Input: object node
         nodo.cnx = nodo.cnxL + nodo.cnxR
         
         
 
     def printNodes(self):
+        # Method to print the connections of all the nodes in the network
         for i in range(self.N):
             print("Nodo {}, {} ".format(i,self.nodes[i]))
 
 
 
     def wsNet(self, p):
-        #self.nodes() es una lista con los nodos
+        # Method to scramble an orderned network
+        # with probability p
+        # Input: p, float 
+        # Output: updated network
         
         N=self.N
+        # Total number of nodes
         for i in range(N):
+        # We go through the network in counterclockwise direction, namely the from 0 to N. We assume that we had a circular network representation.
             rdm=random.random()
+            # Get a random number between [0-1]
             if(rdm<p):
-                n1=i #Actual
-                n2=random.choice(self.nodes[n1].cnxR) #ex-coneccion
-                n3=select_node(self.nodes[n1].cnx,n1,N) #Recableado 
+            # Verify if the random number is less than p
+                n1=i 
+                # Actual node
+                n2=random.choice(self.nodes[n1].cnxR) 
+                # Randomly we choose a connection to 
+                # elminate
+                n3=select_node(self.nodes[n1].cnx,n1,N) 
+                # Randomly we choose a new connection
+
                 self.nodes[n1].cnxR.remove(n2)
                 self.nodes[n1].cnx.remove(n2)
+                # Remove the connection n2 from n1
                 self.nodes[n1].cnxL.append(n3)
                 self.nodes[n1].cnx.append(n3)
+                # Add the new connection n3 to n1
           
                 self.nodes[n2].cnxL.remove(n1)
                 self.nodes[n2].cnx.remove(n1)
+                # Remove the node n1 from 
+                # the connections of  n2
                 
                 self.nodes[n3].cnxL.append(n1)
                 self.nodes[n3].cnx.append(n1)
+                # Add the node n1 to n3
 
 def select_node(cnxs,n1,N):
+    # Function to choose a random node
     candidates=[]    
     for i in range(N):
         if (i not in cnxs) and (i != n1) :

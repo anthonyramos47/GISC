@@ -4,13 +4,13 @@ from Dynamics import *
 
 def main():
 
+    #redCompleta = network(20)
+    #redCompleta.plotAdjacentMatrix()
+    
     red  = swNet(10,4,0.5)
-    dyn = homophile(red, 6, 3, 1, 10)
+    dyn = homophily(red, 6, 3, 1, 10)
 
-    print("Init Nodo1 :"+str(dyn.net_state.nodes[1].vec_Param))
-    for t in range(10):
-        dyn.homophile_step()
-        print("time: {} Param  : {} \n".format(t, dyn.net_state.nodes[1].vec_Param))
+    dyn.simulation()
 
 
 main()
