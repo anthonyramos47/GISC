@@ -81,7 +81,73 @@ class homophily:
         for i in range(N):
             self.node_hom(i)
             
-            
+    def n_base_transf(self, node):
+        base = self.Q
+        length = self.F 
+        sumation = 0
+        for i in range(length):
+            sumation += base**i * node.vec_Param[i]
+        return sumation
+
+    def get_nodes_state(self, state):
+        tot_nodes = self.net_state.N
+        list_nodes =[]
+        for i in range(tot_nodes):
+            node = self.net_state.nodes[i]
+            if self.n_base_transf(node) == state:
+                list_nodes.append(node)
+        return list_nodes    
+
+
+    def coloring_val(self, graph):
+        base = self.Q
+        length = self.F
+        nodes = self.net_state.nodes
+        tot_comb = base**length
+        step = 1/length
+        val_map = lambda i:  step*i 
+        values = [val_map(self.n_base_transf(nodes[node])) for node in graph.nodes()]
+        return values
+        
+
+     
+    def plot_color_graph(self):
+        # Method that plot the network. It return an
+        # image of the topology of the network.
+        N = self.net_state.N
+        edges = []
+        for i in range(N):
+            cnx = self.net_state.nodes[i].cnx
+            for j in cnx: 
+                edges.append([i,j])
+        gr = nx.Graph() 
+        # Initialize the graph
+        gr.add_edges_from(edges)
+        # Add the edges to graph
+        colors = self.coloring_val(gr)
+        nx.draw_circular(gr, cmap=plt.get_cmap('plasma'), node_color=colors, with_labels=True, node_size=250, font_color='white')
+        # Define the characteristics of the plot
+        #plt.savefig(file_name)
+        plt.show()   
+
+    def save_color_graph(self, file):
+        # Method that plot the network. It return an
+        # image of the topology of the network.
+        N = self.net_state.N
+        edges = []
+        for i in range(N):
+            cnx = self.net_state.nodes[i].cnx
+            for j in cnx: 
+                edges.append([i,j])
+        gr = nx.Graph() 
+        # Initialize the graph
+        gr.add_edges_from(edges)
+        # Add the edges to graph
+        colors = self.coloring_val(gr)
+        nx.draw_circular(gr, cmap=plt.get_cmap('plasma'), node_color=colors, with_labels=True, node_size=250, font_color='white')
+        # Define the characteristics of the plot
+        plt.savefig(file)
+        #plt.show()       
             
 
     def node_hom(self, i):
@@ -133,6 +199,7 @@ class homophily:
 
         for t in range(T_total):
             self.homophily_step()
+            self.save_color_graph("sim_1_t"+str(t))
             #print("time: {} Param  : {} \n".format(t, self.net_state.nodes[1].vec_Param))
 
 
