@@ -103,8 +103,7 @@ class homophily:
         base = self.Q
         length = self.F
         nodes = self.net_state.nodes
-        tot_comb = base**length
-        step = 1/length
+        step = 1/(base**length)
         val_map = lambda i:  step*i 
         values = [val_map(self.n_base_transf(nodes[node])) for node in graph.nodes()]
         return values
@@ -191,6 +190,14 @@ class homophily:
                 vec_s.append(0)
         return vec_s
 
+    def print_states(self, fileName):
+        dataFile = open(str(fileName)+".dat","w")
+        totalN = self.net_state.N
+        for i in range(totalN):
+            dataFile.write("Nodo"+str(i)+"state :"+str(self.net_state.nodes[i].vec_Param))
+            dataFile.write("\n")
+        dataFile.close()
+
     def simulation(self):
         # Method that run a complet simulation of 
         # homophily dynamics with time T
@@ -200,6 +207,7 @@ class homophily:
         for t in range(T_total):
             self.homophily_step()
             self.save_color_graph("sim_1_t"+str(t))
+            self.print_states("sim_1_t"+str(t))
             #print("time: {} Param  : {} \n".format(t, self.net_state.nodes[1].vec_Param))
 
 
