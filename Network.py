@@ -14,28 +14,11 @@ class network():
     def completeGraph(self):
         # Method that create a complete graph. It return a list of objects node.
 
-        nodesList = [] # Create an empty list
-        nodeT= self.N # Define the total number of nodes
-        for i in range(nodeT):
-            nodesList.append( node([x for x in range(nodeT)  if x != i])) 
-        # Append an object node, that is connected with all the other nodes except itself, at each iteration
-        return nodesList
     
     def adjacentMatrix(self):
         # Method to create the adjacent matrix of the
         # network. It return a list of list (matrix).
 
-        totalN = self.N # Total number of nodes
-        matrix = np.zeros((totalN, totalN)) 
-        # Initialize a matrix N x N of zeros
-        for i in range(totalN):
-            nodeaux = self.nodes[i]
-            for j in nodeaux.cnx:
-                matrix[i][j] = 1      
-        # For each node i, at j an integer in the list 
-        # of connections of the node it is put a 1 in 
-        # the position matrix[i,j] s
-        return matrix
 
     def plot_ad_mat(self):
         # Method that plot the network. It return an
