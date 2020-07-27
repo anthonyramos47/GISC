@@ -1,4 +1,4 @@
 from Homophily import *
 from MassMedia import *
 from TwoMedia import *
-from corona import *
+#from corona import *
