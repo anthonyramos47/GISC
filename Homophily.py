@@ -1,5 +1,4 @@
 # Module Homphile dynamics
-from Topologies import *
 import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -150,7 +149,6 @@ class Homophily():
     def draw_network(self):
         plt.clf()
         graph = self.graph
-        N = graph.number_of_nodes()
         nodes = graph.nodes()
         lst_nodes = list(graph.nodes())
         colormap = plt.get_cmap('plasma')

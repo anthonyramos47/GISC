@@ -49,7 +49,6 @@ class Two_Media():
         plt.draw()
 
     def event_simulation(self, event):
-        graph = self.graph
         if event.button == 1:
             self.dynamic_step()
             self.draw_network()
@@ -77,7 +76,6 @@ class Two_Media():
     def add_nodes(self):
         # Method to add attributes to the nodes
         graph = self.graph
-        opt = range(self.tot_opt)
         N = graph.number_of_nodes()
         dic = {}
         for i in range(N):
@@ -205,7 +203,6 @@ class Two_Media():
     def draw_network(self):
         plt.clf()
         graph = self.graph
-        N = graph.number_of_nodes()
         nodes = graph.nodes()
         lst_nodes = list(graph.nodes())
         colormap=plt.get_cmap('plasma')

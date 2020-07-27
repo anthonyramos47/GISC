@@ -1,5 +1,4 @@
 # Module Mass Media dynamics
-from Topologies import *
 import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -45,7 +44,6 @@ class Mass_Media():
         plt.draw()
 
     def event_simulation(self, event):
-        graph = self.graph
         if event.button == 1:
             self.dynamic_step()
             self.draw_network()
@@ -73,7 +71,6 @@ class Mass_Media():
     def add_nodes(self):
         # Method to add attributes to the nodes
         graph = self.graph
-        opt = range(self.tot_opt)
         N = graph.number_of_nodes()
         dic = {}
         for i in range(N):
@@ -86,9 +83,9 @@ class Mass_Media():
         # per node
         # Input: current_id, index of the current node
         # Output: modified node i
-        
         graph = self.graph
         nodes = graph.nodes()
+
         # Current node
         n1 = current_id
 
@@ -186,7 +183,6 @@ class Mass_Media():
     def draw_network(self):
         plt.clf()
         graph = self.graph
-        N = graph.number_of_nodes()
         nodes = graph.nodes()
         lst_nodes = list(graph.nodes())
         colormap=plt.get_cmap('plasma')
