@@ -1,4 +1,4 @@
-from topologies import SmallWorldNetwork, CompleteNetwork, SquareNetwork
+from topologies import SmallWorldNetwork, CompleteNetwork, SquareNetwork, ScaleFreeNetwork
 from dynamics import TwoMedia
 
 
@@ -10,6 +10,9 @@ def main():
 
      #SN = SquareNetwork(height = 4, width  = 3)
      #SN.draw_network()
+
+     SFN = ScaleFreeNetwork(100)
+     SFN.draw_network()
 
      SWN = SmallWorldNetwork(N = 50,K = 5,p = 1)
      SWN.draw_network(with_labels = True)
