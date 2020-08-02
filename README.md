@@ -1,6 +1,6 @@
 # GISC
 
-This project shows some `topologies` and `dynamics` of small world networks for research purposes. This project used the libriary [Networkx](https://networkx.github.io/) to facilitate the use and observation of graphs.
+This project shows some `topologies` and `dynamics` of small world networks for research purposes. This project used the library [Networkx](https://networkx.github.io/) to facilitate the use and observation of graphs.
 Also, it was added some notebooks in the documentation folder for understanding each part of the project.
 
 ## How to explore the project

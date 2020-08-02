@@ -1,11 +1,7 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Documentation",
-    "\\Documentation\\Notebooks",
-    "\\dynamics",
-    "\\topologies"
+    "\\Documentation\\Notebooks"
   ],
-  "SelectedNode": "\\Documentation\\Notebooks\\Square_Network.ipynb",
   "PreviewInSolutionExplorer": false
 }
