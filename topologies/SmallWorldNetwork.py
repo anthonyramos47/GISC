@@ -6,9 +6,9 @@ import random
 class SmallWorldNetwork(nx.Graph):
     def __init__(self, N, K, p, distribution = np.random.random):
         """Define a small world network with the following parameters
-            N = numero total de nodos
-            K = vecinos que cada node tiene al incio, Numero de conexiones promedio
-            p = probabilidad de desorden o nivel de desorden
+            N = number of total nodes
+            K = neighbors of each node in the first ordered graph. Average links number.
+            p = disorder probability or disorder level.
             random_distribution = the probability function must be contained in the [0,1) interval 
         """
         self.N = N
