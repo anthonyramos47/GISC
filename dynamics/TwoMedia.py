@@ -212,9 +212,9 @@ class TwoMedia():
         
         pos = nx.get_node_attributes(self.graph, 'pos')
         if pos =={}:
-            nx.draw_circular(graph, node_size=250, with_labels=True, node_color=colors, font_color='w')
+           nx.draw_circular(graph, node_size=250, with_labels=True, node_color=colors, font_color='w')
         else:
-            nx.draw(graph, pos, node_size=250, with_labels=True, node_color=colors, font_color='w')
+           nx.draw(graph, pos, node_size=250, with_labels=True, node_color=colors, font_color='w')
         nx.draw(graph_media, pos= positions,
         node_color= [colormap(self.color_media(self.media)), colormap(self.color_media(self.media2))], with_labels=True, node_size=2500, font_color='w')
         plt.draw()
