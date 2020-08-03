@@ -21,4 +21,4 @@ The implemented topologies are `CompleteNetwork`, `ScaleFreeNetwork`, `SquareNet
 
 ### Dynamic
 
-[comming soon by Anthony]
+** Homophily ** This dynamic consider a network $G$, where each node has a state vector $C_i$ with length $F$ and each element of $\sigma_{ij} \in C_i$ has $q$ possible choices. In each stept of the dynamics, it is choose a random neighbor $n_j \in G$  of a node $n_i \in G$ and in dependence of how similar are the state vectors $C_i, C_j$ a given number of elements (n_ch) of $C_j$ are copied to $C_i$. This mimic the homophily in social terms https://en.wikipedia.org/wiki/Homophily.
