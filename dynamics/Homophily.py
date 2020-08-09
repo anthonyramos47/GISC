@@ -29,7 +29,7 @@ class Homophily():
         opt = range(self.tot_opt)
         # Get the total number of nodes
         N = graph.number_of_nodes()
-        # Create a dictionarie
+        # Create a dictionary
         dic = {}
         for i in range(N):
             # Create a vector of parameters C_i 
@@ -37,9 +37,9 @@ class Homophily():
             for par in range(self.tot_par):
                 # Add a parameter given the number of options
                 vec_par.append(random.choice(opt))
-            # Add the vector of parameters to the dictionarie
+            # Add the vector of parameters to the dictionary
             dic.update({ i: { 'param' : vec_par}})
-        # Add the dictionarie to the network graph
+        # Add the dictionary to the network graph
         nx.set_node_attributes(graph, dic)
 
    
