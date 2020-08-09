@@ -235,7 +235,7 @@ class Homophily():
             plt.close()
 
 
-# Function to obtain the indixes of the attributes to change
+# Function to obtain the indices of the attributes to change
 def select_atr(vec_sim, n_ach, F):
     atrs_ch = []
 

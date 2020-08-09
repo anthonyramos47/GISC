@@ -9,7 +9,7 @@ import random
 class TwoMedia():
 
     def __init__(self, graph, tot_par, tot_opt, B, B2, n_ch, T):
-        """ Define an Homophily Dinamics:
+        """ Define an TwoMedia Dinamics:
             graph is nx.Graph() with a given topology.
             tot_par is total number of parameters (F).
             tot_op is the total number of options per parameter (q).
@@ -308,7 +308,7 @@ class TwoMedia():
 
 
 
-# Function to obtain the indixes of the attributes to change
+# Function to obtain the indices of the attributes to change
 def select_atr(vec_sim, n_ach, F):
     atrs_ch = []
 
