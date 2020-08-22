@@ -29,7 +29,37 @@ class TwoMedia():
         self.media2 = self.rand_parameters()
 
 #-----------------------------------FUNCTIONS OF THE DYNAMICS--------------------------------------------------------------------#
-    
+    # Function to get a dictionario of the states and the number of nodes with that state on the network
+    def get_data(self):
+        self.data_sim()
+        dic_data = {} # Create a dic of {state: number of nodes with that state}
+        nodes = self.graph.nodes() # Get the nodes
+        tot_nodes = self.graph.number_of_nodes()
+        for i in range(tot_nodes):
+            par = self.n_base_transf(i)
+            if par not in dic_data:
+                dic_data[par] = 1
+            else:
+                dic_data[par] += 1
+        # print(dic_data)
+        sort_dic = sorted(dic_data.items(), key= lambda kv:(kv[1], kv[0])) 
+        if len(sort_dic) ==1:
+            tup = (sort_dic[-1],(0,0))
+        else: 
+            tup = (sort_dic[-1], sort_dic[-2])
+        return tup
+
+    # Function to run a simulation for data taking
+    def data_sim(self):
+        # Add the attributes to the nodes of the network        
+        self.add_attributes()
+        # Run the simulation for T steps
+        for t in range(self.T):
+            # Run one step of the dynamics
+            self.dynamic_step()
+
+        
+
     # Function that run the two media dynamics over all the nodes of the network.
     def dynamic_step(self):
         # Get the total number of nodes
@@ -84,9 +114,10 @@ class TwoMedia():
             vec_simM = self.similarities(param_n1, self.media)
             # Compute the probability of interaction
             Pm = np.sum(vec_simM)/self.tot_par  
-            # With probability Pm we interact wiht the media 1.
-            if(random.random() < Pm):
-
+            #print(Pm)
+            # With probability Pm we interact with the media 1.
+            if(random.random() < Pm) and Pm != 1.0:
+                #print('Entre!')
                 # Choose a vector of random indices of length n_ch
                 # with the choosen parameters to copy from n2 to n1
                 # Cj to C_i
@@ -100,15 +131,15 @@ class TwoMedia():
                 n1_update = {n1: {'param': param_n1}}
                 # Update the attributes of the nodes in the graph
                 nx.set_node_attributes(graph, n1_update)
+
         # If we dont interact with the media 1, we verify if we interact with the second media
         elif (dice > self.B and dice < (self.B2 + self.B)):
             # Get the Similarity vector with media 2
             vec_simM = self.similarities(param_n1, self.media2)
             # Compute the probability of interaction
             Pm = np.sum(vec_simM)/self.tot_par  
-            
             # With probability Pm we interact with the media 2
-            if(random.random() < Pm):
+            if(random.random() < Pm) and Pm != 1.0:
 
                 # Obtain the list of indeces of attributes to change
                 atrs_ch=select_atr(vec_simM, self.n_ch, self.tot_par)  
@@ -123,6 +154,7 @@ class TwoMedia():
 
                 # Update the attributes of the node in the graph
                 nx.set_node_attributes(graph, n1_update)
+
         # If we do not interact with the medias we interact with our neighbors        
         else: 
             # List of neighbors
@@ -136,7 +168,7 @@ class TwoMedia():
 
             # Interaction probability
             P = np.sum(vec_sim)/self.tot_par  
-            if(random.random()<P):
+            if(random.random()<P) and P != 1.0:
                 # Obtain the list of indeces of attributes to change
                 atrs_ch=select_atr(vec_sim, self.n_ch, self.tot_par)  
                 
@@ -241,12 +273,23 @@ class TwoMedia():
         colors = [colormap(nodes[i]['color']) for i in lst_nodes]
         # Get the position of the nodes
         pos = nx.get_node_attributes(self.graph, 'pos')
+        # Graph to plot the media
+        graph_media = nx.Graph()
+        graph_media.add_node('Media\n'+str(self.B), pos=(-5, 15))
+        position = nx.get_node_attributes(graph_media, 'pos')
+
+        graph_media2 = nx.Graph()
+        graph_media2.add_node('Media2\n'+str(self.B2), pos=(-5, 2))
+        position2 = nx.get_node_attributes(graph_media2, 'pos')
+
         # If the nodes has no position, they are plotted as a circular graph
         # Else, it is consider their positions (Used in the square network)
         if pos =={}:
-            nx.draw_circular(graph, node_size=250, with_labels=True, node_color=colors)
+            nx.draw_circular(graph, node_size=250, with_labels=True, node_color=colors, font_color='w', font_size=8)
         else:
-            nx.draw(graph, pos, node_size=250, with_labels=True, node_color=colors)
+            nx.draw(graph, pos, node_size=250, with_labels=True, node_color=colors, font_color='w', font_size=8)
+        nx.draw(graph_media, pos= position, node_color= colormap(self.color_media(self.media)), with_labels=True, node_size=2500, font_color='w')
+        nx.draw(graph_media2, pos= position2, node_color= colormap(self.color_media(self.media2)), with_labels=True, node_size=2500, font_color='w')
         plt.draw()
         #plt.show()
 
