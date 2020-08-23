@@ -30,7 +30,7 @@ for i in range( 1 , 1001, 10 ):
      averageS2 = 0 # Porcion Promedio de la segunda poblacion mas grande
      for j in range(5):
           # Inicializamos la dinamica
-          dyn = TwoMedia(graph=SN, tot_par = F, tot_opt = i, B=medias_ar[rank][0], B2=medias_ar[rank][1], n_ch=1, T=500)
+          dyn = TwoMedia(graph=SN, tot_par = F, tot_opt = i, B=medias_ar[rank][0], B2=medias_ar[rank][1], n_ch=1, T=200)
           # Inicializamos la toma de datos
           dic = dyn.get_data()
           averageS1 +=dic[0][1]/800
