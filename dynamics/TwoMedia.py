@@ -8,25 +8,28 @@ import random
 
 class TwoMedia():
 
-    def __init__(self, graph, tot_par, tot_opt, B, B2, n_ch, T):
+    def __init__(self, graph, tot_par, tot_opt, B, R, n_ch, tol=10):
         """ Define an TwoMedia Dinamics:
             graph is nx.Graph() with a given topology.
             tot_par is total number of parameters (F).
             tot_op is the total number of options per parameter (q).
-            B is the probability of interaction with the media 1.
-            B2 is the probability of interaction with the media 2.
+            B is the probability of interaction with the medias
+            R is the interaction with one of the medias. 
             n_ch is the total number of parameter to change when two nodes interact.
-            T is the total number of steps in the dynamics.
+            changes count the modifications in during the dynamics
+            rep count the times there is no changes
         """
         self.graph = graph
         self.tot_par = tot_par
         self.tot_opt = tot_opt
         self.n_ch = n_ch
-        self.T = T
+        self.tol = tol 
         self.B = B
-        self.B2 = B2
+        self.R = R
         self.media = self.rand_parameters()
         self.media2 = self.rand_parameters()
+        self.changes = 0
+        self.rep  = 0
 
 #-----------------------------------FUNCTIONS OF THE DYNAMICS--------------------------------------------------------------------#
     # Function to get a dictionario of the states and the number of nodes with that state on the network
@@ -34,9 +37,17 @@ class TwoMedia():
         self.data_sim()
         dic_data = {} # Create a dic of {state: number of nodes with that state}
         nodes = self.graph.nodes() # Get the nodes
-        tot_nodes = self.graph.number_of_nodes()
+        tot_nodes = self.graph.number_of_nodes() # Get number of nodes
+        media1 = self.n_base_gen(self.media) # Transform to an n-base the media1
+        media2 = self.n_base_gen(self.media2) # Transform to an n-base the media2
+        pop_med1 = 0 # Counter for the population with same opinion as media1
+        pop_med2 = 0 # Counter for the population with same opinion as media1
         for i in range(tot_nodes):
             par = self.n_base_transf(i)
+            if par == media1:
+                pop_med1 +=1
+            if par == media2:
+                pop_med2 +=1
             if par not in dic_data:
                 dic_data[par] = 1
             else:
@@ -44,21 +55,31 @@ class TwoMedia():
         # print(dic_data)
         sort_dic = sorted(dic_data.items(), key= lambda kv:(kv[1], kv[0])) 
         if len(sort_dic) ==1:
-            tup = (sort_dic[-1],(0,0))
+            tup = (sort_dic[-1][1], 0, pop_med1, pop_med2)
         else: 
-            tup = (sort_dic[-1], sort_dic[-2])
+            tup = (sort_dic[-1][1], sort_dic[-2][1], pop_med1, pop_med2)
         return tup
 
     # Function to run a simulation for data taking
     def data_sim(self):
         # Add the attributes to the nodes of the network        
         self.add_attributes()
-        # Run the simulation for T steps
-        for t in range(self.T):
-            # Run one step of the dynamics
+        # Run the simulation until convergence
+        converge = False
+        # i count the steps 
+        i = 0
+        while not converge:
+            # Run the dynamic for the network
             self.dynamic_step()
-
-        
+            if self.changes == 0:
+                self.rep  += 1
+            else:
+                self.rep  = 0
+            if self.rep  == self.tol:
+                converge = True
+            i += 1
+            self.changes = 0
+        print("Tot Steps:", i)
 
     # Function that run the two media dynamics over all the nodes of the network.
     def dynamic_step(self):
@@ -109,51 +130,53 @@ class TwoMedia():
         dice = random.random()
         # Verify if we interact with the first media
         if (dice < self.B):
+            internal_dice = random.random()
+            if internal_dice < self.R:
+                # Get the Similarity vector. 1 equal, 0 diff 
+                vec_simM = self.similarities(param_n1, self.media)
+                # Compute the probability of interaction
+                Pm = np.sum(vec_simM)/self.tot_par  
+                #print(Pm)
+                # With probability Pm we interact with the media 1.
+                if(random.random() < Pm) and Pm != 1.0:
+                    self.changes += 1
+                    #print('Entre!')
+                    # Choose a vector of random indices of length n_ch
+                    # with the choosen parameters to copy from n2 to n1
+                    # Cj to C_i
+                    atrs_ch=select_atr(vec_simM, self.n_ch, self.tot_par)  
+                    
+                    # Copy of the parameters of n2 to n1  
+                    for atr in atrs_ch:
+                        param_n1[atr]=self.media[atr] 
 
-            # Get the Similarity vector. 1 equal, 0 diff 
-            vec_simM = self.similarities(param_n1, self.media)
-            # Compute the probability of interaction
-            Pm = np.sum(vec_simM)/self.tot_par  
-            #print(Pm)
-            # With probability Pm we interact with the media 1.
-            if(random.random() < Pm) and Pm != 1.0:
-                #print('Entre!')
-                # Choose a vector of random indices of length n_ch
-                # with the choosen parameters to copy from n2 to n1
-                # Cj to C_i
-                atrs_ch=select_atr(vec_simM, self.n_ch, self.tot_par)  
-                
-                # Copy of the parameters of n2 to n1  
-                for atr in atrs_ch:
-                    param_n1[atr]=self.media[atr] 
+                    # Update the parameters of the node n1
+                    n1_update = {n1: {'param': param_n1}}
+                    # Update the attributes of the nodes in the graph
+                    nx.set_node_attributes(graph, n1_update)
 
-                # Update the parameters of the node n1
-                n1_update = {n1: {'param': param_n1}}
-                # Update the attributes of the nodes in the graph
-                nx.set_node_attributes(graph, n1_update)
+        # If we dont interact with the media 1, we interact with the second media
+            else:
+                # Get the Similarity vector with media 2
+                vec_simM = self.similarities(param_n1, self.media2)
+                # Compute the probability of interaction
+                Pm = np.sum(vec_simM)/self.tot_par  
+                # With probability Pm we interact with the media 2
+                if(random.random() < Pm) and Pm != 1.0:
+                    self.changes += 1
+                    # Obtain the list of indeces of attributes to change
+                    atrs_ch=select_atr(vec_simM, self.n_ch, self.tot_par)  
+                    
 
-        # If we dont interact with the media 1, we verify if we interact with the second media
-        elif (dice > self.B and dice < (self.B2 + self.B)):
-            # Get the Similarity vector with media 2
-            vec_simM = self.similarities(param_n1, self.media2)
-            # Compute the probability of interaction
-            Pm = np.sum(vec_simM)/self.tot_par  
-            # With probability Pm we interact with the media 2
-            if(random.random() < Pm) and Pm != 1.0:
+                    # Copy the parameters of n2 to n1  
+                    for atr in atrs_ch:
+                        param_n1[atr]=self.media2[atr] 
 
-                # Obtain the list of indeces of attributes to change
-                atrs_ch=select_atr(vec_simM, self.n_ch, self.tot_par)  
-                
+                    # Update the parametrs of the node 1
+                    n1_update = {n1: {'param': param_n1}}
 
-                # Copy the parameters of n2 to n1  
-                for atr in atrs_ch:
-                    param_n1[atr]=self.media2[atr] 
-
-                # Update the parametrs of the node 1
-                n1_update = {n1: {'param': param_n1}}
-
-                # Update the attributes of the node in the graph
-                nx.set_node_attributes(graph, n1_update)
+                    # Update the attributes of the node in the graph
+                    nx.set_node_attributes(graph, n1_update)
 
         # If we do not interact with the medias we interact with our neighbors        
         else: 
@@ -169,6 +192,7 @@ class TwoMedia():
             # Interaction probability
             P = np.sum(vec_sim)/self.tot_par  
             if(random.random()<P) and P != 1.0:
+                self.changes += 1 
                 # Obtain the list of indeces of attributes to change
                 atrs_ch=select_atr(vec_sim, self.n_ch, self.tot_par)  
                 
@@ -275,11 +299,11 @@ class TwoMedia():
         pos = nx.get_node_attributes(self.graph, 'pos')
         # Graph to plot the media
         graph_media = nx.Graph()
-        graph_media.add_node('Media\n'+str(self.B), pos=(-5, 15))
+        graph_media.add_node('Media\n'+str(self.B*self.R), pos=(-5, 15))
         position = nx.get_node_attributes(graph_media, 'pos')
 
         graph_media2 = nx.Graph()
-        graph_media2.add_node('Media2\n'+str(self.B2), pos=(-5, 2))
+        graph_media2.add_node('Media2\n'+str(self.B*(1-self.R)), pos=(-5, 2))
         position2 = nx.get_node_attributes(graph_media2, 'pos')
 
         # If the nodes has no position, they are plotted as a circular graph
@@ -310,16 +334,26 @@ class TwoMedia():
         fig=plt.figure()
         # Add the attributes to the nodes of the network
         self.add_attributes()
-        # Run the simulation for T steps
-        for t in range(self.T):
+        converge = False 
+        i = 0
+        while not converge:
             # Run one step of the dynamics
             self.dynamic_step()
+            if self.changes == 0:
+                self.rep  += 1
+            else:
+                self.rep  = 0
+            if self.rep  == self.tol:
+                converge = True
+            i +=1
+            self.changes = 0 
             # Draw the network in the given state
             self.draw_network()
             # Show the drawed network
             plt.show()
             # Delay for the next step
             plt.pause(0.001)
+        print("Steps :", i)
 
     # Function to run a graphical simulation that interact with click events
     def graph_click_simulation(self):

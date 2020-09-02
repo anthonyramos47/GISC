@@ -187,6 +187,7 @@ class MassMedia():
         lst_nodes = list(graph.nodes())
         colormap=plt.get_cmap('plasma')
         colors = [colormap(nodes[i]['color']) for i in lst_nodes]
+        
         graph_media = nx.Graph()
         graph_media.add_node('Media', pos=(-1,-1))
         position = nx.get_node_attributes(graph_media, 'pos')

@@ -26,15 +26,19 @@ for i in range( 1 , 100):
      F = 10 # Longitud de los vectores de opinion
      Q = step*i # Valor Q
      q = int(-(1/(-1 + (1 - Q)**(1/F)))) # Obtenemos q a partir de Q
-     averageS1 = 0 # Porcion Promedio de la poblacion mas grande
-     averageS2 = 0 # Porcion Promedio de la segunda poblacion mas grande
+     averageS1 = 0 # Average of the main majority
+     averageS2 = 0 # Average of the second majority
+     averageB = 0  # Average Population with the same opinion as B
+     averageB2 = 0 # Average Population with the same opinion as B2
      for j in range(5):
           # Inicializamos la dinamica
           dyn = TwoMedia(graph=SN, tot_par = F, tot_opt = q, B=medias[rank][0], B2=medias[rank][1], n_ch=1, T=200)
           # Inicializamos la toma de datos
           dic = dyn.get_data()
-          averageS1 +=dic[0][1]/1600
-          averageS2 +=dic[1][1]/1600 
+          averageS1 += dic[0]/1600
+          averageS2 += dic[1]/1600 
+          averageB  += dic[2]/1600
+          averageB2 += dic[3]/1600
      # Sacamos un promedio de los datos tomados
      averageS1 /= 5
      averageS2 /= 5

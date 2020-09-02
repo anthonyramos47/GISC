@@ -4,7 +4,7 @@ import networkx as nx
 import random
 
 class SmallWorldNetwork(nx.Graph):
-    def __init__(self, N, K, p, distribution = np.random.random):
+    def __init__(self, N, K, p, distribution = random.random):
         """Define a small world network with the following parameters
             N = number of total nodes
             K = neighbors of each node in the first ordered graph. Average links number.

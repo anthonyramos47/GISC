@@ -5,26 +5,27 @@ import time
 
 
 SN = SquareNetwork(height = 40, width  = 40)
-
-f = open("prueba.dat","w")
-t = time.time()     
-for i in range(1,150):
-     F = 10
-     Q = 1 - (1 - 1/i)**F
-     averageS1 = 0
-     averageS2 = 0
-     for j in range(5):
-          dyn = TwoMedia(graph=SN, tot_par = F, tot_opt = i, B=0.02, B2=0.5, n_ch=1, T=10)
-          dic = dyn.get_data()
-          averageS1 +=dic[0][1]/800 
-          averageS2 +=dic[1][1]/800 
-     averageS1 /= 5
-     averageS2 /= 5
-     cad = str(Q)+" "+str(averageS1)+" "+str(averageS2)+"\n"
-     f.write(cad)
-t_end = time.time()
-print("Tiempo:",(t_end-t))
-f.close
+dyn = TwoMedia(graph=SN, tot_par=10, tot_opt= 10000, B=0.5, R=0.3, n_ch= 1, tol=10)
+dyn.data_sim()
+# f = open("prueba.dat","w")
+# t = time.time()     
+# for i in range(1,150):
+#      F = 10
+#      Q = 1 - (1 - 1/i)**F
+#      averageS1 = 0
+#      averageS2 = 0
+#      for j in range(5):
+#           dyn = TwoMedia(graph=SN, tot_par = F, tot_opt = i, B=0.02, B2=0.5, n_ch=1, T=10)
+#           dic = dyn.get_data()
+#           averageS1 +=dic[0][1]/800 
+#           averageS2 +=dic[1][1]/800 
+#      averageS1 /= 5
+#      averageS2 /= 5
+#      cad = str(Q)+" "+str(averageS1)+" "+str(averageS2)+"\n"
+#      f.write(cad)
+# t_end = time.time()
+# print("Tiempo:",(t_end-t))
+# f.close
    
 # Q [0, 1]
 # [0 0 1 0]  F = 4  q = 10000
